@@ -8,7 +8,9 @@ networks:
 
 services:
 
+  #######################################
   # Postgres: The database used by Kong
+  #######################################
   kong-database:
     image: postgres:9.6
     container_name: kong-postgres
@@ -29,7 +31,9 @@ services:
       timeout: 30s
       retries: 3
 
+  #######################################
   # Kong database migration
+  #######################################
   kong-migration:
     image: ${KONG_DOCKER_TAG:-kong:latest}
     command: kong migrations bootstrap
@@ -45,7 +49,9 @@ services:
     depends_on:
       - kong-database
 
+  #######################################
   # Kong: The API Gateway
+  #######################################
   kong:
     image: ${KONG_DOCKER_TAG:-kong:latest}
     restart: on-failure
@@ -73,7 +79,9 @@ services:
       - "8443:8443"
       - "8444:8444"
 
+  #######################################
   # Konga database prepare
+  #######################################
   konga-prepare:
     image: pantsel/konga:latest
     command: "-c prepare -a postgres -u postgresql://kong:${KONG_PG_PASSWORD:-kong}@kong-database:5432/konga"
@@ -83,7 +91,9 @@ services:
     depends_on:
       - kong-database
 
+  #######################################
   # Konga: Kong GUI
+  #######################################
   konga:
     image: pantsel/konga:latest
     restart: always
